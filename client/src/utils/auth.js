@@ -1,50 +1,45 @@
 import decode from 'jwt-decode';
 
 class AuthService {
-    //retrieve data saved in token
-    getProfile() {
-        return decode(this.getToken());
+  getProfile() {
+    return decode(this.getToken());
+  }
+
+  loggedIn() {
+    // Checks if there is a saved token and it's still valid
+    const token = this.getToken();
+    return !!token && !this.isTokenExpired(token);
+  }
+
+  isTokenExpired(token) {
+    try {
+      const decoded = decode(token);
+      if (decoded.exp < Date.now() / 1000) {
+        return true;
+      } else return false;
+    } catch (err) {
+      return false;
     }
+  }
 
-    //check user is logged in
-    Loggedin() {
-        //checks for token and if valid
-        const token = this.getToken();
-        //use type coersion to check if token is NOT undefined and token is NOT expired
-        return !!token && !this.isTokenExpired(token);
-    }
+  getToken() {
+    // Retrieves the user token from localStorage
+    return localStorage.getItem('id_token');
+  }
 
-    //check if token expired
-    isTokenExpired(token) {
-        try {
-            const decode = decode(token);
-            if (decode.exp < Date.now() / 1000) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (err) {
-            return false;
-        }
-    }
+  login(idToken) {
+    // Saves user token to localStorage
+    localStorage.setItem('id_token', idToken);
 
-    getToken() {
-        return localStorage.getItem('id_token');
-    }
+    window.location.assign('/');
+  }
 
-
-    login(idToken) {
-        localStorage.setItem('id_token', idToken);
-
-        window.location.assign('/');
-    }
-
-    logout() {
-        localStorage.removeItem('id_token');
-        // reload and reset state of app
-        window.location.assign('/');
-    }
+  logout() {
+    // Clear user token and profile data from localStorage
+    localStorage.removeItem('id_token');
+    // this will reload the page and reset the state of the application
+    window.location.assign('/');
+  }
 }
-
 
 export default new AuthService();

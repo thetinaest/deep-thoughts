@@ -18,7 +18,7 @@ const ThoughtList = ({ thoughts, title }) => {
                 style={{ fontWeight: 700 }}
                 className="text-light"
               >
-              {thought.username}
+                {thought.username}
               </Link>{' '}
               thought on {thought.createdAt}
             </p>
@@ -37,5 +37,4 @@ const ThoughtList = ({ thoughts, title }) => {
   );
 };
 
-  export default ThoughtList;
-  
+export default ThoughtList;
